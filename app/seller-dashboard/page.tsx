@@ -11,6 +11,8 @@ import {
   Tag, Clock, CheckCircle, RefreshCw, Edit3, Image as ImageIcon,
   Sparkles, X, Check, MessageSquare, Star, ExternalLink, Award
 } from "lucide-react";
+import { PLATFORM_BRANDING } from "@/lib/budgetFilter";
+import InstagramIcon from "@/components/InstagramIcon";
 
 /* ── Fallback Dish Thumbnail Component ── */
 function DishThumbnail({ src, alt }: { src?: string; alt: string }) {
@@ -369,6 +371,59 @@ export default function SellerDashboard() {
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
                 <span>{isEng ? "Status: Active & Approved" : "Hali: Imeidhinishwa"}</span>
               </span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Official Platform Admin Support & Technical Hotline ── */}
+        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 text-white shadow-lg">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center shrink-0 shadow-md">
+                <InstagramIcon className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-pink-400">
+                    {isEng ? "Platform Administration & Technical Support" : "Usaidizi wa Kiufundi na Wasimamizi"}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold border border-emerald-500/40">
+                    24/7 Available
+                  </span>
+                </div>
+                <h3 className="text-base font-extrabold text-white mt-0.5">
+                  {isEng ? "SafePlate Hub Admin: Trustcore_web" : "Msimamizi wa SafePlate Hub: Trustcore_web"}
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  {isEng
+                    ? "Need menu modifications, hygiene audit renewals, or seller support? Chat directly with platform admin on WhatsApp or Instagram."
+                    : "Unahitaji msaada wa menyu, ukaguzi wa usafi, au usaidizi wa kiufundi? Wasiliana moja kwa moja na msimamizi kupitia WhatsApp au Instagram."}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              {/* WhatsApp Admin button */}
+              <a
+                href={PLATFORM_BRANDING.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition-all shadow-md shadow-emerald-600/20"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>WhatsApp: {PLATFORM_BRANDING.whatsappNumber}</span>
+              </a>
+
+              {/* Instagram button */}
+              <a
+                href={PLATFORM_BRANDING.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-xs transition-all shadow-md"
+              >
+                <InstagramIcon className="w-4 h-4" />
+                <span>@{PLATFORM_BRANDING.instagramHandle}</span>
+              </a>
             </div>
           </div>
         </div>

@@ -10,6 +10,8 @@ import {
   Store, ShieldCheck, Upload, MapPin, Phone, CheckCircle, 
   Sparkles, ArrowRight, Building2, User, Lock, Award, MessageSquare 
 } from "lucide-react";
+import { PLATFORM_BRANDING } from "@/lib/budgetFilter";
+import InstagramIcon from "@/components/InstagramIcon";
 
 export default function RegisterPlacePage() {
   const { locale } = useLocale();
@@ -342,6 +344,34 @@ export default function RegisterPlacePage() {
               )}
 
             </form>
+
+            {/* Platform Admin Help Contact */}
+            <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+              <span className="text-slate-500 dark:text-slate-400">
+                {isEng ? "Need onboarding assistance or audit questions?" : "Unahitaji msaada wa usajili au maswali ya ukaguzi?"}
+              </span>
+              <div className="flex items-center gap-3">
+                <a
+                  href={PLATFORM_BRANDING.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-extrabold hover:underline"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>WhatsApp: {PLATFORM_BRANDING.whatsappNumber}</span>
+                </a>
+                <span className="text-slate-300 dark:text-slate-700">•</span>
+                <a
+                  href={PLATFORM_BRANDING.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-pink-500 dark:text-pink-400 font-extrabold hover:underline"
+                >
+                  <InstagramIcon className="w-3.5 h-3.5" />
+                  <span>@{PLATFORM_BRANDING.instagramHandle}</span>
+                </a>
+              </div>
+            </div>
           </div>
         )}
 

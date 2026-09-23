@@ -1,13 +1,30 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useLocale } from '@/context/LocaleContext';
-import { Search, MapPin, Shield, CreditCard, BookOpen, ChevronRight, Sparkles, Lock } from 'lucide-react';
+import { 
+  Search, MapPin, Shield, CreditCard, BookOpen, 
+  ChevronRight, Sparkles, Lock, Wallet, ArrowRight, X,
+  Store, UtensilsCrossed
+} from 'lucide-react';
 
 const NEIGHBORHOODS = ['Ngarenaro', 'Majengo', 'Clock Tower', 'Njiro'];
 
+const QUICK_SUGGESTIONS = [
+  { label: "Pilau", query: "Pilau" },
+  { label: "Nyama Choma", query: "Nyama Choma" },
+  { label: "< 5,000 TZS", query: "5000" },
+  { label: "5k – 10k TZS", query: "5000 - 10000" },
+  { label: "Njiro", query: "Njiro" },
+  { label: "Ngarenaro", query: "Ngarenaro" },
+  { label: "Mama Zawadi", query: "Mama Zawadi" },
+];
+
 export default function HeroSection() {
+  /* ── All Hooks Unconditionally at Top Level ── */
   const { t, locale } = useLocale();
+  const router = useRouter();
   const isEng = locale === 'eng';
 
   const [mounted, setMounted] = useState(false);
@@ -21,6 +38,20 @@ export default function HeroSection() {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const query = searchValue.trim();
+    if (query) {
+      router.push(`/explore?q=${encodeURIComponent(query)}`);
+    } else {
+      router.push('/explore');
+    }
+  };
+
+  const handleQuickSuggestionClick = (presetQuery: string) => {
+    router.push(`/explore?q=${encodeURIComponent(presetQuery)}`);
+  };
 
   const trustBadges = [
     {
@@ -97,44 +128,90 @@ export default function HeroSection() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg sm:text-xl text-slate-300/90 max-w-2xl mb-10 leading-relaxed animate-slide-in-up delay-100">
+        <p className="text-lg sm:text-xl text-slate-300/90 max-w-2xl mb-8 leading-relaxed animate-slide-in-up delay-100">
           {isEng
-            ? 'Connect with neighborhood eateries in Ngarenaro, Majengo, Clock Tower & Njiro — all verified through our 4-step hygiene framework.'
-            : 'Ungana na migahawa ya mitaa Ngarenaro, Majengo, Mnara wa Saa na Njiro — yote yaliyothibitishwa kupitia mfumo wetu wa hatua 4 wa usafi.'}
+            ? 'Instantly find eateries by restaurant name, specific food dish, budget in TZS, or neighborhood location.'
+            : 'Tafuta migahawa ya Arusha papo hapo kwa jina la mgahawa, chakula maalum, bajeti ya TZS, au mtaa wowote.'}
         </p>
 
-        {/* Search Bar */}
-        <div className="w-full max-w-3xl bg-white p-1.5 rounded-2xl sm:rounded-full shadow-2xl shadow-black/40 mb-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 sm:gap-0 animate-slide-in-up delay-200">
-          <div className="flex-1 flex items-center px-4 py-3">
-            <MapPin className="w-5 h-5 text-amber-500 mr-3 flex-shrink-0" />
+        {/* ── Multi-Criteria Search Bar ── */}
+        <form 
+          onSubmit={handleSearchSubmit}
+          className="w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2 rounded-2xl sm:rounded-full shadow-2xl shadow-black/40 mb-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 animate-slide-in-up delay-200"
+        >
+          <div className="flex-1 flex items-center px-4 py-2.5">
+            <div className="w-9 h-9 rounded-full bg-amber-500/10 dark:bg-amber-500/20 text-amber-500 flex items-center justify-center mr-3 shrink-0">
+              <Search className="w-4 h-4" />
+            </div>
             <input
               type="text"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder={t('searchPlaceholder') || 'Search Arusha eateries, e.g. Nyama Choma, Njiro...'}
-              className="w-full bg-transparent border-none outline-none text-slate-800 placeholder:text-slate-400 text-base font-medium"
+              placeholder={
+                isEng 
+                  ? "Search restaurant, food, budget (TZS), or location..." 
+                  : "Tafuta mkahawa, chakula, bajeti (TZS), au mtaa..."
+              }
+              className="w-full bg-transparent border-none outline-none text-slate-800 dark:text-white placeholder:text-slate-400 text-sm sm:text-base font-medium"
             />
+            {searchValue && (
+              <button
+                type="button"
+                onClick={() => setSearchValue('')}
+                className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
-          <button className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-500 hover:to-orange-400 text-white px-7 py-3.5 rounded-xl sm:rounded-full font-bold transition-all shadow-lg shadow-amber-500/25 hover:scale-[1.02] active:scale-[0.98]">
+          <button 
+            type="submit"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-500 hover:to-orange-400 text-white px-7 py-3.5 rounded-xl sm:rounded-full font-bold transition-all shadow-lg shadow-amber-500/25 hover:scale-[1.02] active:scale-[0.98] shrink-0 text-sm"
+          >
             <Search className="w-4 h-4" />
             <span>{isEng ? 'Search' : 'Tafuta'}</span>
           </button>
+        </form>
+
+        {/* Quick Suggestion Chips */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-8 animate-fade-in delay-250">
+          <span className="text-xs font-bold text-slate-400 flex items-center gap-1 mr-1">
+            <Sparkles className="w-3 h-3 text-amber-400" />
+            {isEng ? "Quick Suggestions:" : "Mapendekezo:"}
+          </span>
+          {QUICK_SUGGESTIONS.map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              onClick={() => handleQuickSuggestionClick(preset.query)}
+              className="px-3 py-1.5 rounded-full bg-slate-800/80 hover:bg-amber-500/20 border border-slate-700/80 hover:border-amber-500/50 text-slate-200 hover:text-amber-300 text-xs font-semibold transition-all backdrop-blur-sm shadow-xs"
+            >
+              {preset.label}
+            </button>
+          ))}
         </div>
 
-        {/* Neighborhood Chips */}
+        {/* Neighborhood Reference Chips */}
         <div className="flex flex-wrap justify-center gap-2 mb-12 animate-fade-in delay-300">
+          <span className="text-xs font-semibold text-slate-500 flex items-center gap-1 mr-1">
+            <MapPin className="w-3 h-3 text-amber-500" />
+            {isEng ? "Arusha Areas:" : "Mitaa ya Arusha:"}
+          </span>
           {NEIGHBORHOODS.map((n) => (
             <button
               key={n}
-              className="px-4 py-2 rounded-full bg-white/8 hover:bg-white/15 border border-white/15 hover:border-amber-400/50 text-white/90 text-sm font-semibold transition-all backdrop-blur-sm hover:text-amber-300"
+              onClick={() => handleQuickSuggestionClick(n)}
+              className="px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-amber-400/50 text-slate-300 hover:text-amber-300 text-xs font-medium transition-all"
             >
-              <MapPin className="w-3 h-3 inline-block mr-1.5 -mt-0.5 text-amber-400" />
               {n}
             </button>
           ))}
-          <button className="px-4 py-2 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-sm font-semibold transition-all backdrop-blur-sm flex items-center gap-1.5">
-            <ChevronRight className="w-3.5 h-3.5" />
-            {isEng ? 'All Districts' : 'Mitaa Yote'}
+          <button 
+            onClick={() => router.push('/explore')}
+            className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:text-amber-300 text-xs font-bold transition-all flex items-center gap-1"
+          >
+            <span>{isEng ? 'Explore All' : 'Gundua Yote'}</span>
+            <ChevronRight className="w-3 h-3" />
           </button>
         </div>
 

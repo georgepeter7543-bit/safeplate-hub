@@ -36,6 +36,9 @@ export default function RestaurantCard({ restaurant, onViewDetails }: Restaurant
       ? `Hello! I would like to order food from ${restaurant.name} via SafePlate Hub.`
       : `Habari! Ningependa kuagiza chakula kutoka ${restaurant.name} kupitia SafePlate Hub.`
   );
+  const dishPricesTZS = (restaurant.menu || []).map((m) => Math.round(m.price * 2650));
+  const minPriceTZS = dishPricesTZS.length > 0 ? Math.min(...dishPricesTZS) : Math.round(restaurant.avgDishPriceUSD * 2650);
+
   const whatsAppOrderUrl = `https://wa.me/${formattedWhatsApp}?text=${orderGreeting}`;
 
   return (
@@ -87,9 +90,10 @@ export default function RestaurantCard({ restaurant, onViewDetails }: Restaurant
             <Star size={13} className="mr-1 fill-amber-500 text-amber-500" />
             {restaurant.rating.toFixed(1)} ({restaurant.reviewCount})
           </div>
-          <div className="flex items-center bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 px-2 py-1 rounded-md">
+          <div className="flex items-center bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 px-2 py-1 rounded-md" title={`Dishes start from TZS ${minPriceTZS.toLocaleString()}`}>
             <BadgeDollarSign size={13} className="mr-1" />
-            Avg. {formatPrice(restaurant.avgDishPriceUSD)}
+            <span>Avg. {formatPrice(restaurant.avgDishPriceUSD)}</span>
+            <span className="text-[10px] opacity-80 ml-1 font-extrabold">• From TSh {minPriceTZS.toLocaleString()}</span>
           </div>
           <div className="flex items-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-md">
             <Clock size={13} className="mr-1" />
